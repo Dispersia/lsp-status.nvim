@@ -81,45 +81,11 @@ local function get_lsp_statusline(bufnr)
   local only_hint = true
   local some_diagnostics = false
   local status_parts = {}
-  if buf_diagnostics then
-    if buf_diagnostics.errors and buf_diagnostics.errors > 0 then
-      table.insert(status_parts,
-                   config.indicator_errors .. config.indicator_separator .. buf_diagnostics.errors)
-      only_hint = false
-      some_diagnostics = true
-    end
-
-    if buf_diagnostics.warnings and buf_diagnostics.warnings > 0 then
-      table.insert(status_parts, config.indicator_warnings .. config.indicator_separator ..
-                     buf_diagnostics.warnings)
-      only_hint = false
-      some_diagnostics = true
-    end
-
-    if buf_diagnostics.info and buf_diagnostics.info > 0 then
-      table.insert(status_parts,
-                   config.indicator_info .. config.indicator_separator .. buf_diagnostics.info)
-      only_hint = false
-      some_diagnostics = true
-    end
-
-    if buf_diagnostics.hints and buf_diagnostics.hints > 0 then
-      table.insert(status_parts,
-                   config.indicator_hint .. config.indicator_separator .. buf_diagnostics.hints)
-      some_diagnostics = true
-    end
-  end
 
   local msgs = get_lsp_progress()
 
   local base_status = vim.trim(table.concat(status_parts, config.component_separator) .. ' ' .. msgs)
-  local symbol = config.status_symbol .. ((some_diagnostics and only_hint) and '' or ' ')
-  if config.current_function then
-    local current_function = vim.b.lsp_current_function
-    if current_function and current_function ~= '' then
-      symbol = symbol .. '(' .. current_function .. ')' .. config.component_separator
-    end
-  end
+  local symbol = ' '
 
   if base_status ~= '' then return symbol .. base_status .. ' ' end
   if not config.diagnostics then return symbol end
